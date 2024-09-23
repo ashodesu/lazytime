@@ -1,5 +1,8 @@
 import time
 import ctypes
+import threading
+import ctypes
+
 
 # Load necessary system libraries
 user32 = ctypes.windll.user32
@@ -14,8 +17,7 @@ def move_mouse(x, y):
     x (int): Target X coordinate
     y (int): Target Y coordinate
     """
-    
-    print("Press any key to stop the program...")
+    # Move the mouse to the specified coordinate position
     user32.SetCursorPos(x, y)
 
 def mouse_click(x=None, y=None, clicks=1, button='left'):
@@ -80,13 +82,36 @@ def check_key_press():
             return True
     return False
 
+def thread_mouse_drag():
+        mouse_drag(100, 100, 101, 101, duration=5)
+        mouse_drag(101, 101, 100, 100, duration=5)
+
 if __name__ == "__main__":
     controller = True
     
-    print("Hold ESC key to stop the program...")
+    print("Hold any key to stop the program...")
+
+    
+
+    # Create a thread to execute mouse_drag
+    drag_thread = threading.Thread(target=thread_mouse_drag)
+    
+    # Start the thread
+    drag_thread.start()
+    
     while controller:
         controller = not check_key_press()
-        mouse_drag(500,500,510,510,duration=0.5)
-        controller = not check_key_press()
-        mouse_drag(510,510,500,500,duration=0.5)
-        controller = not check_key_press()
+    
+    # Attempt to terminate the thread
+    if drag_thread.is_alive():
+        print("Attempting to terminate mouse_drag operation...")
+       
+        drag_thread.join()
+
+        while True:
+            if drag_thread.is_alive():
+                print("Unable to gracefully terminate the thread, the program may need to be forcibly exited")
+                time.sleep(1)
+            else:
+                print("Mouse_drag operation has been successfully terminated")
+                break
