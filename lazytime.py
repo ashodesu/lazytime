@@ -8,7 +8,6 @@ user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
 
 def move_mouse(x, y):
-    global controller
     """
     Move the mouse to the specified coordinate position.
     
@@ -66,11 +65,9 @@ def mouse_drag(start_x, start_y, end_x, end_y, duration=0.5,press_left=False):
     steps = int(duration * 10)
     for i in range(1, steps + 1):
         x = start_x + (end_x - start_x) * i // steps
-        controller = not check_key_press()
         y = start_y + (end_y - start_y) * i // steps
         move_mouse(x, y)
         time.sleep(duration / steps)
-        controller = not check_key_press()
     
     if press_left:
         user32.mouse_event(0x0004, 0, 0, 0, 0)  # Release left button
