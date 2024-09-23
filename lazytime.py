@@ -1,8 +1,7 @@
+import sys
 import time
-import ctypes
 import threading
 import ctypes
-
 
 # Load necessary system libraries
 user32 = ctypes.windll.user32
@@ -83,8 +82,9 @@ def check_key_press():
     return False
 
 def thread_mouse_drag():
-        mouse_drag(100, 100, 101, 101, duration=5)
-        mouse_drag(101, 101, 100, 100, duration=5)
+    while True:
+        mouse_drag(100, 100, 110, 110, duration=5)
+        mouse_drag(110, 110, 100, 100, duration=5)
 
 if __name__ == "__main__":
     controller = True
@@ -94,24 +94,13 @@ if __name__ == "__main__":
     
 
     # Create a thread to execute mouse_drag
-    drag_thread = threading.Thread(target=thread_mouse_drag)
+    drag_thread = threading.Thread(target=thread_mouse_drag,daemon=True)
     
     # Start the thread
     drag_thread.start()
     
     while controller:
-        controller = not check_key_press()
-    
-    # Attempt to terminate the thread
-    if drag_thread.is_alive():
-        print("Attempting to terminate mouse_drag operation...")
-       
-        drag_thread.join()
-
-        while True:
-            if drag_thread.is_alive():
-                print("Unable to gracefully terminate the thread, the program may need to be forcibly exited")
-                time.sleep(1)
-            else:
-                print("Mouse_drag operation has been successfully terminated")
-                break
+        if check_key_press():
+            controller = False
+            print("Program stopped")
+            sys.exit()
