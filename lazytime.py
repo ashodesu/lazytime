@@ -80,8 +80,8 @@ def check_key_press():
 
 def thread_mouse_drag():
     while True:
-        mouse_drag(100, 100, 110, 110, duration=5)
-        mouse_drag(110, 110, 100, 100, duration=5)
+        mouse_drag(100, 100, 500, 500, duration=5)
+        mouse_drag(500, 500, 100, 100, duration=5)
 
 if __name__ == "__main__":
     controller = True
